@@ -1,0 +1,12 @@
+.nav-bar{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.logout{
+    justify-self: flex-end
+}
+.link {
+    color: rgba(255,255,255,.5);
+}

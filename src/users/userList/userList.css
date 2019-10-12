@@ -1,0 +1,14 @@
+.table-row {
+    display: flex;
+    width: 100%;
+    cursor: pointer;
+}
+
+.table-item {
+    width: 25%;
+}
+
+.table-header-item {
+    width: 25%;
+    font-weight: bold;
+}
