@@ -3,6 +3,8 @@ import axios from '../axios';
 import {Form, Button, FormGroup, FormControl, FormLabel, Alert, Badge, Spinner } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 import './signup.css';
+import { Link } from "react-router-dom";
+
 
 class SignUp extends Component {
   state = {
@@ -96,19 +98,7 @@ if(this.state.redirect) {
 
         <h1><Badge variant="secondary">Sign Up</Badge></h1>
 
-        {/* <div className='new-user'> 
-              <div className='new-user-property'> <span>First Name: </span> <input type="text" name='firstName' onChange={this.changeHandler} /> </div>
-              <div className='new-user-property'> <span>Last Name:</span> <input type="text" name='lastname' onChange={this.changeHandler} /> </div> 
-              <div className='new-user-property'> <span>Email:</span> <input type="text" name='email' onChange={this.changeHandler} /> </div> 
-              <div className='new-user-property'> <span>Password:</span> <input type="text" name='password' onChange={this.changeHandler} /> </div> 
-                <button onClick={() => this.addUser()}> Add User </button> <br />
-            </div> */}
-
-        {/* <div className='new-user-property'> <span>Address:</span> <input type="text" name='address' onChange={this.changeHandler} /> </div>
-              <div className='new-user-property'> <span>Code:</span> <input type="text" name='postalCode' onChange = { (event) => this.setState({postalCode: event.target.value})} /> </div> */}
-        {/* <div className='new-user-property'> <span>Middle Name: </span><input type="text" name='middlename' onChange={this.changeHandler} /> </div>*/}
-
-        <Form className='add-new-user'>
+           <Form className='add-new-user'>
           <FormGroup controlId="firstName" >
             <FormLabel> First Name</FormLabel>
             <FormControl
@@ -157,6 +147,11 @@ if(this.state.redirect) {
             Sign Up
           </Button>
         </Form>
+
+        <div className='mt-4'>
+            Already Have an Account
+            <Link className='link login-link m-2' to="/">Login</Link>
+          </div>
 
       </div>
     );

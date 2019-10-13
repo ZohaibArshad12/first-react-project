@@ -17,7 +17,6 @@ class AppNavbar extends Component {
   
   logoutClicked = () => {
     localStorage.clear();
-    console.log('Nav Bar Props = ', this.props);
     
     this.props.onUserLoggedOut();
   }
@@ -54,7 +53,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  console.log('APPNAVVBARRRRRR mapDispatchToProps called');
   return {
     onUserLoggedOut: () => dispatch({ type: actionTypes.AUTH_LOGOUT })
   };

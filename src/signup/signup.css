@@ -27,3 +27,8 @@ justify-content: space-evenly;
     margin: 0 auto;
     max-width: 30vw;
 }
+
+
+.login-link{
+    color: blue !important;
+}

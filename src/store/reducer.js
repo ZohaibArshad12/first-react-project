@@ -8,7 +8,6 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
-    console.log('Reducer Called. Stae :', state, '  Action: ', action);
 
     switch (action.type) {
         case actionTypes.LOADING_USERS_FROM_API:

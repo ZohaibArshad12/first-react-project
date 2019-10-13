@@ -9,7 +9,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import SignUp from "./signup/signup";
 
-
 class App extends Component {
   componentDidMount() {
   }
@@ -23,10 +22,10 @@ class App extends Component {
       </Switch>
     );
 
-    console.log("App.js isAuthenticated", this.props.isAuthenticated);
+    // console.log("App.js isAuthenticated", this.props.isAuthenticated);
 
     if (this.props.isAuthenticated) {
-      console.log("App.js Authenticated");
+      // console.log("App.js Authenticated");
 
       routes = (
         <div>

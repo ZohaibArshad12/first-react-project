@@ -7,30 +7,30 @@ import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import reducer from "./store/reducer";
 import { BrowserRouter } from "react-router-dom";
-import axios from "axios";
 import thunk from 'redux-thunk'
+import axios from './axios';
 
-axios.defaults.baseURL = "https://user-products.herokuapp.com/api/";
-axios.defaults.headers.common["x-auth-token"] =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDk3ZTkxYjdmNDdkMTAwMTdmNTZiNGYiLCJuYW1lIjoiTWFqaWQgSGFzaG1pIiwiaWF0IjoxNTcwMjM2Njk5fQ.zTmB5rODixYNfpoHHZn9Io4XMBC_KAisp09dAsf802M";
-axios.defaults.headers.post["Content-Type"] = "application/json";
+
+const store = createStore(reducer, applyMiddleware(thunk));
 
 axios.interceptors.request.use(
   request => {
-    console.log("Axios req interceptor : ", request);
-    // Edit request config
+    console.log('token = ', store.getState().token);
+    
+    // axios.defaults.headers.common["x-auth-token"] = store.getState().token ;
+    // axios.defaults.headers.common["x-auth-token"] = store.getState().token ? store.getState().token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDk3ZTkxYjdmNDdkMTAwMTdmNTZiNGYiLCJuYW1lIjoiTWFqaWQgSGFzaG1pIiwiaWF0IjoxNTcwMjM2Njk5fQ.zTmB5rODixYNfpoHHZn9Io4XMBC_KAisp09dAsf802M";
+    axios.defaults.headers["x-auth-token"] ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDk3ZTkxYjdmNDdkMTAwMTdmNTZiNGYiLCJuYW1lIjoiTWFqaWQgSGFzaG1pIiwiaWF0IjoxNTcwMjM2Njk5fQ.zTmB5rODixYNfpoHHZn9Io4XMBC_KAisp09dAsf802M';
+
     return request;
   },
   error => {
-    console.log("req error = ", error);
+    console.log("Axios request error = ", error);
     return Promise.reject(error);
   }
 );
 
 axios.interceptors.response.use(
   response => {
-    console.log("Axios response interceptor : ", response);
-    // Edit request config
     return response;
   },
   error => {
@@ -39,8 +39,6 @@ axios.interceptors.response.use(
   }
 );
 
-const store = createStore(reducer, applyMiddleware(thunk));
-// const store = createStore(reducer);
 
 ReactDOM.render(
   <Provider store={store}>

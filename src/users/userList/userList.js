@@ -70,7 +70,6 @@ class UserList extends Component {
 
 
   render() {
-    console.log('userlist render called');
 
     if (this.props.loading) {
       return (
