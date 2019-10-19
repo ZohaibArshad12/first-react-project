@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import { Route, Switch, withRouter, Redirect } from "react-router-dom";
-import Login from "./login/login";
 import { connect } from "react-redux";
-import NewUser from "./users/newUser/newUser";
-import AppNavbar from "./navbar/appNavbar";
-import UserList from "./users/userList/userList";
+import NewUser from "./Containers/users/newUser/newUser";
+import AppNavbar from "./Containers/navbar/appNavbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import SignUp from "./signup/signup";
+import userList from "./Containers/users/userList/userList";
+import Login from "./Containers/login/login";
+import SignUp from "./Containers/signup/signup";
+import EditProfile from "./Containers/users/editProfile/editProfile";
+import ProductsList from "./Containers/products/products";
 
 class App extends Component {
   componentDidMount() {
@@ -34,8 +36,9 @@ class App extends Component {
           <Switch>
             <Route path="/new-user" component={NewUser}></Route>
             <Route path="/login" component={Login}></Route>
-            <Route path="/users-list" exact component={UserList}></Route>
-            <Route path="/" exact component={UserList}></Route>
+            <Route path="/edit-profile" component={EditProfile}></Route>
+            <Route path="/products-list" component={ProductsList}></Route>
+            <Route path="/*" exact component={userList}></Route>
             <Redirect to="/"></Redirect>
           </Switch>
         </div>

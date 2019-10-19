@@ -1,0 +1,6 @@
+open powershell and write below command
+
+ git push  https://github.com/ZohaibArshad12/first-react-project.git  master
+
+then add username : zohaibarshad12
+password: 1......z..

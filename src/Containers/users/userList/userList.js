@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { UserItem } from "../user-item";
 import "./userList.css";
 import { connect } from 'react-redux';
-import * as actionTypes from '../../store/actions/actionTypes'
+import * as actionTypes from '../../../store/actions/actionTypes'
 import { Alert, Spinner, Table } from "react-bootstrap";
-import { onFetchUsers } from '../../store/actions/authActions';
+import { onFetchUsers } from '../../../store/actions/authActions';
+import { UserItem } from "../../../Components/user-list-item/user-item";
+import EditUser  from "../userEdit/editUser";
 
 // class UserModel{
 // firstName;
@@ -29,7 +30,8 @@ class UserList extends Component {
     super(props);
 
     this.state = {
-
+      isEditingUser: false,
+      userToEdit:null,
       isLoading: true
     };
   }
@@ -50,6 +52,16 @@ class UserList extends Component {
     this.setState({
       users: users
     });
+  }
+
+  editUser(user){
+    const userToEdit = {...user};
+    this.setState({isEditingUser: true,userToEdit: userToEdit});
+  }
+  editingDone(){
+    console.log('editing done');
+    
+    this.setState({isEditingUser: false,userToEdit: null});
   }
 
   tableHeader = (
@@ -81,6 +93,9 @@ class UserList extends Component {
         </div>
       )
     }
+    else if(this.state.isEditingUser ) {
+     return( <EditUser user={this.state.userToEdit} editingDone= {()=> this.editingDone()}> </EditUser>)
+    }
     else {
       return (
         <div>
@@ -91,9 +106,11 @@ class UserList extends Component {
             {this.props.users.map((user, index) => {
               return (
                 <UserItem
-                  key={index}
+                  key={user._id}
+                  index = {index}
                   user={user}
                   deleteUser={() => this.removeUser(index)}
+                  editUser={() => this.editUser(user)}
                 />
               );
             })}

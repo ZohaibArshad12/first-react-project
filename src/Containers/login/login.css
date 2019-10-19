@@ -10,7 +10,8 @@
     border: 4px solid #ececec;
     border-radius: 8px;
     align-self: center;
-    width: 40vw;
+    width: 30vw;
+    min-width: 400px;
   }
   input{
     padding-bottom: 4vh;

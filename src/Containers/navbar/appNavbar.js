@@ -3,7 +3,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 import './appNavbar.css';
 import { connect } from 'react-redux';
-import * as actionTypes from '../store/actions/actionTypes'
+import * as actionTypes from '../../store/actions/actionTypes'
 
 class AppNavbar extends Component {
 
@@ -31,12 +31,14 @@ class AppNavbar extends Component {
             <Nav className="mr-auto">
               <Link className='link ' to="/users-list">Users List</Link>
               <Link className='link ml-4' to="/new-user">New User</Link>
+              <Link className='link ml-4' to="/products-list">Products</Link>
               
               {/* <Nav.Link href="users-list">Users List</Nav.Link>
               <Nav.Link href="new-user">New User</Nav.Link> */}
             </Nav>
             <Nav >
-              <Nav.Link className='logout' onClick={this.logoutClicked} >Logout</Nav.Link>
+              <Link className='link mr-4' to="/edit-profile">Edit Profile</Link>
+              <span className='link mr-2' onClick={this.logoutClicked} >Logout</span>
             </Nav>
           </Navbar.Collapse>
         </Navbar>

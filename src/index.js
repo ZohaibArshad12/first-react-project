@@ -15,22 +15,19 @@ const store = createStore(reducer, applyMiddleware(thunk));
 
 axios.interceptors.request.use(
   request => {
-    console.log('token = ', store.getState().token);
-    
-    // axios.defaults.headers.common["x-auth-token"] = store.getState().token ;
-    // axios.defaults.headers.common["x-auth-token"] = store.getState().token ? store.getState().token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDk3ZTkxYjdmNDdkMTAwMTdmNTZiNGYiLCJuYW1lIjoiTWFqaWQgSGFzaG1pIiwiaWF0IjoxNTcwMjM2Njk5fQ.zTmB5rODixYNfpoHHZn9Io4XMBC_KAisp09dAsf802M";
-    axios.defaults.headers["x-auth-token"] ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDk3ZTkxYjdmNDdkMTAwMTdmNTZiNGYiLCJuYW1lIjoiTWFqaWQgSGFzaG1pIiwiaWF0IjoxNTcwMjM2Njk5fQ.zTmB5rODixYNfpoHHZn9Io4XMBC_KAisp09dAsf802M';
+
+    request.headers["x-auth-token"] = store.getState().token ? store.getState().token : "";
 
     return request;
   },
   error => {
-    console.log("Axios request error = ", error);
     return Promise.reject(error);
   }
 );
 
 axios.interceptors.response.use(
   response => {
+    
     return response;
   },
   error => {

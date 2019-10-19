@@ -1,0 +1,29 @@
+.new-user{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 40vh;
+    justify-content: space-between;
+    }
+    
+    .new-user-property {
+    display: flex;
+    width: 30vw;
+    justify-content: space-evenly;   
+    }
+    .new-user-property input{
+        width: 70%;
+    }
+    .new-user-property span{
+        width: 30%;
+    }
+    
+    .heading{
+        display: flex;
+        justify-content: center;
+    }
+    .add-new-user {
+        margin: 0 auto;
+        max-width: 30vw;
+    }

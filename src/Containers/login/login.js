@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { Button, Badge, Spinner } from "react-bootstrap";
 import "./login.css";
 import { Link } from "react-router-dom";
-import axios from "../axios";
+import axios from "../../axios";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import * as actionTypes from "../store/actions/actionTypes";
+import * as actionTypes from "../../store/actions/actionTypes";
 import { Alert } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 

@@ -7,7 +7,7 @@ export const onFetchUsers = () => {
 
         axios.get('users').then(response => {
 
-            console.log('Get Users Response ', response);
+            // console.log('Get Users Response ', response);
             if (response.status === 200) {
                 dispatch({ type: actionTypes.LOADED_USERS_FROM_API, users: response.data });
             } else {
