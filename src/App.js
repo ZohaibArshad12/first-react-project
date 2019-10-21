@@ -9,7 +9,8 @@ import userList from "./Containers/users/userList/userList";
 import Login from "./Containers/login/login";
 import SignUp from "./Containers/signup/signup";
 import EditProfile from "./Containers/users/editProfile/editProfile";
-import ProductsList from "./Containers/products/products";
+import ProductsList from "./Containers/products/productsList/products";
+import AddProducts from "./Containers/products/addProduct/addproduct";
 
 class App extends Component {
   componentDidMount() {
@@ -38,6 +39,7 @@ class App extends Component {
             <Route path="/login" component={Login}></Route>
             <Route path="/edit-profile" component={EditProfile}></Route>
             <Route path="/products-list" component={ProductsList}></Route>
+            <Route path="/add-product" component={AddProducts}></Route>
             <Route path="/*" exact component={userList}></Route>
             <Redirect to="/"></Redirect>
           </Switch>

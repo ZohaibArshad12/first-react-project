@@ -31,7 +31,8 @@ class AppNavbar extends Component {
             <Nav className="mr-auto">
               <Link className='link ' to="/users-list">Users List</Link>
               <Link className='link ml-4' to="/new-user">New User</Link>
-              <Link className='link ml-4' to="/products-list">Products</Link>
+              <Link className='link ml-4' to="/products-list">Products List</Link>
+              <Link className='link ml-4' to="/add-product">Add Product</Link>
               
               {/* <Nav.Link href="users-list">Users List</Nav.Link>
               <Nav.Link href="new-user">New User</Nav.Link> */}

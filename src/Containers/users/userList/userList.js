@@ -65,7 +65,7 @@ class UserList extends Component {
   }
 
   tableHeader = (
-    <thead>
+  <thead>
     <tr>
       <th>#</th>
       <th>First Name</th>
