@@ -1,121 +1,140 @@
-import React, {
-    useState,
-    useEffect
-  } from 'react';
-  import axios from '../../../axios';
-  import { Alert, Spinner, Table } from "react-bootstrap";
-  
-  
-  const AddProducts = () => {
-  return(<h1>In progress</h1>)
-//     // const [loading, setLoading] = useState(false)
-//     const [products, setProducts] = useState([])
-//     const loadingState = useState(false);
-//     const loading = loadingState[0];
-//     const setLoading = loadingState[1];
-  
-//     useEffect(() => {
-//       setLoading(true);
-//       axios.get('products').then(response => {
-//         if (response.status === 200) {
-//           const products = [
-//             ...response.data
-//           ];
-//           console.log('Products = ', products);
-//           setProducts(products);
-//           setLoading(false);
-          
-//           // this.setState({ firstName: user.firstName, lastName: user.lastName, email: user.email, _id: user._id, isLoading: false });
-  
-//         }
-//         //   else {
-//         //     alert(`Getting Products Error, Status Code: ${response.status} , Status Text : ${response.statusText}`)
-//         //     this.setState({ isLoading: false, error: true });
-//         //     setTimeout(() => {
-//         //       this.setState({ error: false });
-//         //     }, 2000);
-//         //   }
-//         // }).catch(err => {
-//         //   this.setState({ isLoading: false, error: true });
-//         //   setTimeout(() => {
-//         //     this.setState({ error: false });
-//         //   }, 2000);
-//         //   console.log('Error Getting Users Me : ', err);
-//         // })
-  
-  
-//       });
-//     },[]);
-//   console.log('loading : ', loading);
-  
-//     return( 
-//           <div> 
-//             <RenderList loading={loading} products = {products} /> 
-//           </div>
-//       );
-  }
-  
-  const RenderList = ({loading, products}) => {
-    if (loading) {
-    return( 
-      <div> 
-        <h1 > Loading {loading} </h1> 
-      </div>
-      ); 
-    } else {
-      return(
-        <div>
-  
-        <Table striped bordered hover variant="dark" size='sm'>
-          <TableHeader/>
-  
-            {products.map((product, index) => {
-              return (
-                <ProductRow
-                  key={product._id}
-                  index = {index}
-                  product={product}
-                  // deleteUser={() => this.removeUser(index)}
-                  // editUser={() => this.editUser(user)}
-                />
-              );
-            })}
-  
-          </Table>
-        </div>
-           );
-    }
-    
+import React, { useState } from "react";
+import axios from "../../../axios";
+
+import { Button, Badge, Spinner, Alert } from "react-bootstrap";
+import "./addProduct.css";
+import { Redirect } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+
+const AddProducts = () => {
+  const [formState, setformState] = useState("");
+
+  const handleSubmit = values => {
+    setformState("loading");
+    axios
+      .post("products", { name: values.name, price: values.price })
+      .then(response => {
+        if (response.status === 200) {
+          setformState("successfull");
+          setTimeout(() => {
+            setformState("redirect");
+          }, 2000);
+        } else {
+          setformState("error");
+          setTimeout(() => {
+            setformState("");
+          }, 2000);
+        }
+      })
+      .catch(err => {
+        setformState("error");
+        setTimeout(() => {
+          setformState("");
+        }, 2000);
+      });
   };
-  
-  const TableHeader = () => {
-    return(
-     <thead>
-       <tr>
-         <th>#</th>
-         <th>prod Name</th>
-         <th>Price</th>
-       </tr>
-     </thead>)
-       
-   };
-   
-   const ProductRow = ({product, index}) => {
-    return (
-  
-      <tbody>
-      <tr 
-      // className='table-row-pointer'  onClick = {  this.props.editUser } 
+
+  switch (formState) {
+    case "loading":
+      return (
+        <div>
+          <Alert variant="info">Adding Product</Alert>
+          <Spinner animation="grow" variant="info" />
+        </div>
+      );
+    case "redirect":
+      return (
+        <div>
+          <Redirect to="/products-list"></Redirect>
+        </div>
+      );
+    case "successfull":
+      return (
+        <div>
+          <Alert variant="success">Product Added Successfully</Alert>
+        </div>
+      );
+    case "error":
+      return (
+        <div>
+          <Alert variant="danger">Error While Adding User</Alert>
+        </div>
+      );
+    default:
+      return <AddProductForm handleSubmit={handleSubmit}></AddProductForm>;
+  }
+};
+
+const AddProductForm = ({ handleSubmit }) => {
+  return (
+    <div className="product-form">
+      <h1>
+        <Badge variant="primary" className="mb-5">
+          New Product
+        </Badge>
+      </h1>
+
+      <Formik
+        initialValues={{ name: "", price: 0 }}
+        validate={values => {
+          let errors = {};
+          if (!values.name) {
+            errors.name = "Name Required";
+          } else if (!values.price) {
+            errors.price = "Price Required";
+          } else if (values.price < 0) {
+            errors.price = "Price Can't be negative";
+          }
+          return errors;
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          handleSubmit(values);
+          setSubmitting(false);
+        }}
       >
-      
-        <td>{index}</td>
-        <td>{product.name}</td>
-        <td>{product.price}</td>
-      </tr>
-    </tbody>
-  
-    );
-   }
-  
-  
-  export default AddProducts;
+        {({ isSubmitting, errors, touched }) => (
+          <Form>
+            <Field
+              type="text"
+              name="name"
+              placeholder="Product Name"
+              className={
+                errors.name && touched.name ? "text-input error" : "text-input"
+              }
+            />
+            <ErrorMessage
+              name="name"
+              render={msg => <div className="error-message">{msg}</div>}
+            />
+            <Field
+              type="number"
+              name="price"
+              placeholder="Product Price"
+              className={
+                errors.price && touched.price
+                  ? "text-input error"
+                  : "text-input"
+              }
+            />
+            <ErrorMessage
+              name="price"
+              component="div"
+              className="error-message"
+            />
+
+            <Button
+              block
+              disabled={isSubmitting || Object.keys(errors).length}
+              type="submit"
+              className="submit-button"
+            >
+              Add Product
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+export default AddProducts;

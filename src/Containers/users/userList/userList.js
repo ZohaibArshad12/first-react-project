@@ -1,11 +1,9 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import "./userList.css";
-import { connect } from 'react-redux';
-import * as actionTypes from '../../../store/actions/actionTypes'
 import { Alert, Spinner, Table } from "react-bootstrap";
-import { onFetchUsers } from '../../../store/actions/authActions';
 import { UserItem } from "../../../Components/user-list-item/user-item";
-import EditUser  from "../userEdit/editUser";
+import axios from "../../../axios";
+
 
 // class UserModel{
 // firstName;
@@ -24,47 +22,82 @@ import EditUser  from "../userEdit/editUser";
 // }
 
 
-class UserList extends Component {
+const UserList = () => {
+  const [users, setUsers] = useState([]);
+  const [formState, setformState] = useState("");
 
-  constructor(props) {
-    super(props);
+  useEffect(() => {
+    setformState("loading");
+    axios
+      .get("users")
+      .then(response => {
+        if (response.status === 200) {
+          const users = [...response.data];
+          setUsers(users);
+          setformState("");
+        } else {
+          setformState("error");
+          setTimeout(() => {
+            setformState("");
+          }, 2000);
+        }
+      })
+      .catch(err => {
+        setformState("error");
+        setTimeout(() => {
+          setformState("");
+        }, 2000);
+      });
+  }, []);
 
-    this.state = {
-      isEditingUser: false,
-      userToEdit:null,
-      isLoading: true
-    };
+  switch (formState) {
+    case "loading":
+      return (
+        <div>
+          <Alert variant="info">Loading Users</Alert>
+          <Spinner animation="grow" variant="info" />
+        </div>
+      );
+    case "error":
+      return (
+        <div>
+          <Alert variant="danger">Error While Loading Users</Alert>
+        </div>
+      );
+    default:
+      return (
+        <div>
+          <RenderList users={users} />
+        </div>
+      );
   }
+};
 
-  componentDidMount() {
-    this.props.onUserLoadingFromApi(true);
-    this.fetchData();
-  }
+const RenderList = ({ users }) => {
+  return (
+    <div>
+      <Table striped bordered hover variant="dark" size="sm">
+        <TableHeader />
+
+        {users.map((user, index) => {
+          return (
+            <UserItem
+            key={user._id}
+            index = {index}
+            user={user}
+            // deleteUser={() => this.removeUser(index)}
+            // editUser={() => this.editUser(user)}
+          />
+          );
+        })}
+      </Table>
+    </div>
+  );
+};
 
 
-  fetchData = () => {
-    this.props.onUserLoadingFromApi();
-  };
-
-  removeUser(index) {
-    const users = [...this.state.users];
-    users.splice(index, 1);
-    this.setState({
-      users: users
-    });
-  }
-
-  editUser(user){
-    const userToEdit = {...user};
-    this.setState({isEditingUser: true,userToEdit: userToEdit});
-  }
-  editingDone(){
-    console.log('editing done');
-    
-    this.setState({isEditingUser: false,userToEdit: null});
-  }
-
-  tableHeader = (
+const TableHeader = () =>{
+  return (
   <thead>
     <tr>
       <th>#</th>
@@ -73,69 +106,7 @@ class UserList extends Component {
       <th>Email</th>
     </tr>
   </thead>
-    // <div className='table-row'>
-    //   <span className='table-header-item'>First Name</span>
-    //   <span className='table-header-item'>Last Name</span>
-    //   <span className='table-header-item'>Email</span>
-    // </div>
   );
-
-
-  render() {
-
-    if (this.props.loading) {
-      return (
-        <div>
-          <Alert variant='info'>
-            Loading Data
-          </Alert>
-          <Spinner animation="grow" variant="info" />
-        </div>
-      )
-    }
-    else if(this.state.isEditingUser ) {
-     return( <EditUser user={this.state.userToEdit} editingDone= {()=> this.editingDone()}> </EditUser>)
-    }
-    else {
-      return (
-        <div>
-
-        <Table striped bordered hover variant="dark" size='sm'>
-          {this.tableHeader}
-
-            {this.props.users.map((user, index) => {
-              return (
-                <UserItem
-                  key={user._id}
-                  index = {index}
-                  user={user}
-                  deleteUser={() => this.removeUser(index)}
-                  editUser={() => this.editUser(user)}
-                />
-              );
-            })}
-
-          </Table>
-        </div>
-        
-      );
-    }
-  }
 }
 
-
-const mapStateToProps = state => {
-  return {
-    users: state.users,
-    loading: state.loading
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onUserLoadedFromApi: (users) => dispatch({ type: actionTypes.LOADED_USERS_FROM_API, users: users }),
-    onUserLoadingFromApi: () => dispatch(onFetchUsers()),
-
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(UserList);
+export default UserList;

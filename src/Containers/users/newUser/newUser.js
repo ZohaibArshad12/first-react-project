@@ -1,3 +1,4 @@
+/*
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../../store/actions/actionTypes'
@@ -100,18 +101,6 @@ if(this.state.redirect) {
 
         <h1 className='heading'> Add User </h1>
 
-        {/* <div className='new-user'> 
-              <div className='new-user-property'> <span>First Name: </span> <input type="text" name='firstName' onChange={this.changeHandler} /> </div>
-              <div className='new-user-property'> <span>Last Name:</span> <input type="text" name='lastname' onChange={this.changeHandler} /> </div> 
-              <div className='new-user-property'> <span>Email:</span> <input type="text" name='email' onChange={this.changeHandler} /> </div> 
-              <div className='new-user-property'> <span>Password:</span> <input type="text" name='password' onChange={this.changeHandler} /> </div> 
-                <button onClick={() => this.addUser()}> Add User </button> <br />
-            </div> */}
-
-        {/* <div className='new-user-property'> <span>Address:</span> <input type="text" name='address' onChange={this.changeHandler} /> </div>
-              <div className='new-user-property'> <span>Code:</span> <input type="text" name='postalCode' onChange = { (event) => this.setState({postalCode: event.target.value})} /> </div> */}
-        {/* <div className='new-user-property'> <span>Middle Name: </span><input type="text" name='middlename' onChange={this.changeHandler} /> </div>*/}
-
         <form className='add-new-user'>
           <FormGroup controlId="firstName" >
             <FormLabel> First Name</FormLabel>
@@ -181,3 +170,170 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewUser);
+
+*/
+
+import React, { useState } from "react";
+import axios from "../../../axios";
+import { Button, Badge, Spinner, Alert } from "react-bootstrap";
+import "./newUser.css";
+import { Redirect } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+
+const NewUser = () => {
+  const [formState, setformState] = useState("");
+
+  const handleSubmit = values => {
+    setformState("loading");
+    axios.post('users', { email: values.email, password: values.password, firstName: values.firstName, lastName: values.lastName })
+      .then(response => {
+        if (response.status === 200) {
+          setformState("successfull");
+          setTimeout(() => {
+            setformState("redirect");
+          }, 2000);
+        } else {
+          setformState("error");
+          setTimeout(() => {
+            setformState("");
+          }, 2000);
+        }
+      })
+      .catch(err => {
+        setformState("error");
+        setTimeout(() => {
+          setformState("");
+        }, 2000);
+      });
+  };
+
+  switch (formState) {
+    case "loading":
+      return (
+        <div>
+          <Alert variant="info">Adding User</Alert>
+          <Spinner animation="grow" variant="info" />
+        </div>
+      );
+    case "redirect":
+      return (
+        <div>
+          <Redirect to="/"></Redirect>
+        </div>
+      );
+    case "successfull":
+      return (
+        <div>
+          <Alert variant="success">User Added Successfully</Alert>
+        </div>
+      );
+    case "error":
+      return (
+        <div>
+          <Alert variant="danger">Error While Adding User</Alert>
+        </div>
+      );
+    default:
+      return <AddUserForm handleSubmit={handleSubmit}/>;
+  }
+};
+
+const AddUserForm = ({ handleSubmit }) => {
+  return (
+    <div className="product-form">
+      <h1>
+        <Badge variant="primary" className="mb-5">
+          New User
+        </Badge>
+      </h1>
+
+      <Formik
+        initialValues={{ firstName: "",lastName: "", email: "", password:"" }}
+        validate={values => {
+          let errors = {};
+          if (!values.firstName) {
+            errors.name = "First Name Required";
+          } else if (!values.lastName) {
+            errors.price = "Last Name Required";
+          }
+            if (!values.email) {
+              errors.email = "Email Required";
+            } else if (
+              !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+            ) {
+              errors.email = "Invalid email address";
+            } else if (!values.password) {
+              errors.password = "Password Required";
+            }
+          
+          return errors;
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          handleSubmit(values);
+          setSubmitting(false);
+        }}
+      >
+        {({ isSubmitting, errors, touched }) => (
+          <Form>
+            <Field
+              type="text"
+              name="firstName"
+              placeholder="First Name"
+              className={
+                errors.firstName && touched.firstName ? "text-input error" : "text-input"
+              }
+            />
+            <ErrorMessage
+              name="lastName"
+              render={msg => <div className="error-message">{msg}</div>}
+            />
+            <Field
+              type="text"
+              name="lastName"
+              placeholder="Last Name"
+              className={
+                errors.lastName && touched.lastName ? "text-input error" : "text-input"
+              }
+            />
+            <ErrorMessage
+              name="lastName"
+              render={msg => <div className="error-message">{msg}</div>}
+            />
+            <Field
+              type="email"
+              name="email"
+              placeholder="Email"
+              className={
+                errors.email && touched.email
+                  ? "text-input error"
+                  : "text-input"
+              }
+            />
+            <ErrorMessage  name="email" render={msg => <div className='error-message'>{msg}</div>} />
+            <Field
+              type="password"
+              name="password"
+              placeholder="Password"
+              className={
+                errors.password && touched.password
+                  ? "text-input error"
+                  : "text-input"
+              }
+            />
+            <ErrorMessage name="password" component="div" className='error-message' />
+            <Button
+              block
+              disabled={isSubmitting || Object.keys(errors).length}
+              type="submit"
+              className="submit-button"
+            >
+              Add User
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+export default NewUser;
